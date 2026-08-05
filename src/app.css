@@ -1,0 +1,39 @@
+
+:root {
+    --background: #181818;
+    --surface: #252525;
+    --text: #ffffff;
+    --primary: #4f46e5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: "Minecraft", Arial, sans-serif;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0;
+}
