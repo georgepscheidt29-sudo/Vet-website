@@ -7,3 +7,10 @@
         {nome}
     </button>
 </div>
+
+<style>
+    .buttonClick {
+        display: flex;
+        margin: 1rem;
+    }
+</style>

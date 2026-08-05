@@ -27,7 +27,7 @@
 <div class="container">
 <h1>Login Page</h1>
 
-    <form id="loginForm" onsubmit={handleSubmit}>
+    <form class="form" id="loginForm" onsubmit={handleSubmit}>
         <p>Insira seu email:</p>
 
         <input
@@ -46,9 +46,7 @@
                 required
         >
 
-        <button type="submit">
-            Login
-        </button>
+        <ButtonClick nome="Login" type="submit" action="handleSubmit"></ButtonClick>
     </form>
 
 </div>
@@ -57,15 +55,17 @@
     .container {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
         align-items: center;
-        height: 100vh;
-        font-family: "Goudy Old Style",system-ui;
+        min-height: 50vh;
+        gap: 1rem;
     }
-    h1 {
-        font-size: 60px;
-    }
-    p {
-        font-size: 25px;
+
+    .form {
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+        background-color: dimgrey;
+        border-radius: 10px;
+        padding: 1.5rem;
     }
 </style>
