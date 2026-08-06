@@ -55,8 +55,10 @@
     .container {
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 3rem;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
     }
 
     .form {
