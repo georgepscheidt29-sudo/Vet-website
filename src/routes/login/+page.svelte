@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {ButtonClick} from "$lib";
 
     import { goto } from '$app/navigation';
 
@@ -22,7 +21,7 @@
             if (response.status === 200) {
                 const data = await response.json();
                 localStorage.setItem('token', data.token);
-                goto('/entry');
+                await goto('/entry');
             } else if (response.status === 401) {
                 errorMessage = 'Credenciais Invalidas';
             } else if (response.status === 400) {
@@ -43,11 +42,11 @@
         <input type="email" bind:value={email} placeholder="Email" />
         <input type="password" bind:value={senha} placeholder="Senha" />
         <button type="submit">Log in</button>
-
-        {#if errorMessage}
-            <p class="error">{errorMessage}</p>
-        {/if}
     </form>
+
+    {#if errorMessage}
+        <p class="error">{errorMessage}</p>
+    {/if}
 
 </div>
 
@@ -63,15 +62,26 @@
 
     .form {
         display: flex;
-        gap: 1rem;
         flex-direction: column;
+        gap: 1rem;
+
+        width: 350px;
+        height: 20vh;
+
         background-color: dimgrey;
         border-radius: 20px;
         padding: 1.5rem;
     }
 
+    .form button {
+        margin-top: auto;
+    }
+
     .error {
         color: red;
-        font-weight: bold;
+        font-size: 1rem;
+        max-width: 300px;
+        white-space: normal;
+        overflow-wrap: normal;
     }
 </style>
