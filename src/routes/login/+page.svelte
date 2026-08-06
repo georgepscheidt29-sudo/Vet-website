@@ -3,9 +3,9 @@
 
     import { goto } from '$app/navigation';
 
-    let email = '';
-    let senha = '';
-    let errorMessage = '';
+    let email = $state('');
+    let senha = $state('');
+    let errorMessage = $state('');
 
     export async function login() {
         errorMessage = '';
