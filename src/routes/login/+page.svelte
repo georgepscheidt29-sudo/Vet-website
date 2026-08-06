@@ -1,52 +1,52 @@
 <script lang="ts">
     import {ButtonClick} from "$lib";
-    import { login } from "$lib/api/login";
-    import { saveToken} from "$lib/api/login";
 
+    import { goto } from '$app/navigation';
 
-    async function handleSubmit(event: SubmitEvent) {
+    let email = '';
+    let senha = '';
+    let errorMessage = '';
 
-        event.preventDefault();
+    export async function login() {
+        errorMessage = '';
 
-        const form = event.currentTarget as HTMLFormElement;
+        try {
+            const response = await fetch('http://localhost:8080/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, senha })
+            });
 
-        const formData = new FormData(form);
-
-        const email = formData.get("email") as string;
-        const senha = formData.get("senha") as string;
-
-        const data = await login(email, senha);
-
-        const token = data.token;
-        saveToken(token);
-
-        console.log(data);
+            if (response.status === 200) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                goto('/entry');
+            } else if (response.status === 401) {
+                errorMessage = 'Credenciais Invalidas';
+            } else if (response.status === 400) {
+                errorMessage = 'Preencha todos os campos antes de enviar';
+            } else {
+                errorMessage = 'Algo deu errado, tente novamente mais tarde';
+            }
+        } catch (err) {
+            errorMessage = 'Servidor indisponivel';
+        }
     }
 </script>
 
 <div class="container">
 <h1>Login Page</h1>
 
-    <form class="form" id="loginForm" onsubmit={handleSubmit}>
-        <p>Insira seu email:</p>
+    <form class="form" onsubmit="{login}">
+        <input type="email" bind:value={email} placeholder="Email" />
+        <input type="password" bind:value={senha} placeholder="Senha" />
+        <button type="submit">Log in</button>
 
-        <input
-                id="email"
-                name="email"
-                type="email"
-                required
-        >
-
-        <p>Insira sua Senha:</p>
-
-        <input
-                id="senha"
-                name="senha"
-                type="password"
-                required
-        >
-
-        <ButtonClick nome="Login" type="submit" action="handleSubmit"></ButtonClick>
+        {#if errorMessage}
+            <p class="error">{errorMessage}</p>
+        {/if}
     </form>
 
 </div>
@@ -56,8 +56,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        min-height: 50vh;
-        gap: 1rem;
+        gap: 3rem;
     }
 
     .form {
@@ -65,7 +64,12 @@
         gap: 1rem;
         flex-direction: column;
         background-color: dimgrey;
-        border-radius: 10px;
+        border-radius: 20px;
         padding: 1.5rem;
+    }
+
+    .error {
+        color: red;
+        font-weight: bold;
     }
 </style>
