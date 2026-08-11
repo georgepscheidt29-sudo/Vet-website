@@ -21,7 +21,7 @@
             if (response.status === 200) {
                 const data = await response.json();
                 localStorage.setItem('token', data.token);
-                await goto('/entry');
+                await goto('/menu');
             } else if (response.status === 401) {
                 errorMessage = 'Credenciais Invalidas';
             } else if (response.status === 400) {
@@ -68,9 +68,10 @@
         width: 350px;
         height: 20vh;
 
-        background-color: dimgrey;
+        background-color: darkgrey;
         border-radius: 20px;
         padding: 1.5rem;
+        border: 1px solid black;
     }
 
     .form button {
