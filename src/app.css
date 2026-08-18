@@ -1,9 +1,9 @@
 
 :root {
-    --background: #181818;
+    --background: #BCBCBC;
     --surface: #252525;
-    --text: #ffffff;
-    --primary: #4f46e5;
+    --text: #111111;
+    --primary: #301934;
 }
 
 * {
@@ -20,7 +20,7 @@ body {
 body {
     background: var(--background);
     color: var(--text);
-    font-family: "Minecraft", Arial, sans-serif;
+    font-family: "Mongolian Baiti", Arial, sans-serif;
 }
 
 button {
@@ -28,9 +28,10 @@ button {
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
-    border-radius: 30px;
     cursor: pointer;
-    font-family: "Minecraft", Arial, sans-serif;
+    font-size: 1rem;
+    font-family: "Courier New", Arial, sans-serif;
+    font-weight: bold;
 }
 
 h1,

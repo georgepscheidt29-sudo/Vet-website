@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {ButtonClick} from "$lib";
+    import {RoundedButton} from "$lib";
     import {goto} from "$app/navigation";
 
     function f() {
@@ -12,7 +12,7 @@
 
     <h1 class="header1">Bem Vindo</h1>
     <h2 class="header2"> Pressione o botão abaixo para acessar a página de login</h2>
-    <ButtonClick nome="Fazer Login" type="button" action = {f}></ButtonClick>
+    <RoundedButton nome="Fazer Login" type="button" action = {f}></RoundedButton>
 
 </div>
 
