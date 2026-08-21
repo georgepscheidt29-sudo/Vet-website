@@ -9,5 +9,20 @@ export const Endpoints = {
     donoGetAll: `donos`,
     donoUpdate: (id: number) => `donos/${id}`,
     donoDelete: (id: number) => `donos/${id}`,
-    donoCreate: `donos`
+    donoCreate: `donos`,
+    petGet: (id: number) => `pets/${id}`,
+    petGetAll: `pets`,
+    petUpdate: (id: number) => `pets/${id}`,
+    petDelete: (id: number) => `pets/${id}`,
+    petCreate: `pets`,
+    vacinaGet: (id: number) => `vacinas/${id}`,
+    vacinaGetAll: `vacinas`,
+    vacinaUpdate: (id: number) => `vacinas/${id}`,
+    vacinaDelete: (id: number) => `vacinas/${id}`,
+    vacinaCreate: `vacinas`,
+    registroGet: (id: number) => `registros/${id}`,
+    registroGetAll: `registros`,
+    registroUpdate: (id: number) => `registros/${id}`,
+    registroDelete: (id: number) => `registros/${id}`,
+    registroCreate: `registros`
 } as const;

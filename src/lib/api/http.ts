@@ -15,7 +15,6 @@ export async function request(url: string, method: string, body: any = null): Pr
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // ... rest of your fetch logic
     const response = await fetch(url, {
         method,
         headers,
@@ -25,11 +24,16 @@ export async function request(url: string, method: string, body: any = null): Pr
     if (!response.ok) {
         if (response.status === 403 && isBrowser) {
 
-            //window.location.href = '/login';
+
             return null;
         }
         throw new Error(`Request failed: ${response.status}`);
     }
 
-    return response.json();
+    if (response.status === 204) {
+        return null;
+    }
+
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
 }
