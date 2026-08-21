@@ -1,1 +1,1 @@
-export { default as RoundedButton } from "./RoundedButton.svelte";
+export { default as RoundedButton } from "./components/RoundedButton.svelte";

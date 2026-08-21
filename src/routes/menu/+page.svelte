@@ -2,14 +2,18 @@
     import { RoundedButton } from "$lib";
     import { goto } from "$app/navigation";
 
-    async function handleNavigation() {
+    async function handleNavigation(path: string) {
         try {
-            await goto("/crud");
+            await goto(`/crud/${path}`);
         } catch (error) {
             console.error("Navigation failed:", error);
         }
     }
 </script>
+
+<svelte:head>
+    <title>Menu</title>
+</svelte:head>
 
 <h1 class="header1">
     Sistema de Controle Para Veterinaria
@@ -19,35 +23,35 @@
     <RoundedButton
             nome="Veterinarios"
             type="button"
-            action={handleNavigation}
+            action={() => handleNavigation('vets')}
             height="3rem"
             fontSize="1rem"
     />
     <RoundedButton
             nome="Clientes"
             type="button"
-            action={handleNavigation}
+            action={() => handleNavigation('clientes')}
             height="3rem"
             fontSize="1rem"
     />
     <RoundedButton
             nome="Pets"
             type="button"
-            action={handleNavigation}
+            action={() => handleNavigation('pets')}
             height="3rem"
             fontSize="1rem"
     />
     <RoundedButton
             nome="Vacinas"
             type="button"
-            action={handleNavigation}
+            action={() => handleNavigation('vacinas')}
             height="3rem"
             fontSize="1rem"
     />
     <RoundedButton
             nome="Registros"
             type="button"
-            action={handleNavigation}
+            action={() => handleNavigation('registros')}
             height="3rem"
             fontSize="1rem"
     />
