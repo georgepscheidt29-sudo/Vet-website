@@ -11,6 +11,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Menu</title>
+</svelte:head>
+
 <h1 class="header1">
     Sistema de Controle Para Veterinaria
 </h1>

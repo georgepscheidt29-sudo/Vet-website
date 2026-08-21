@@ -1,19 +1,22 @@
 <script lang="ts">
-    import type { Vet } from "$lib/api/types";
+    import type {DonoList, Vet} from "$lib/api/types";
+    import CreateButton from "$lib/components/CreateButton.svelte";
+    import {Endpoints} from "$lib/api/endpoints";
 
     const { data } = $props();
 
-    const vetList: Vet[] = data?.data?.vetRespostaList || [];
+    const donoList: DonoList = data?.data?.vetRespostaList || [];
 </script>
 
 <svelte:head>
-    <title>Veterinarios</title>
+    <title>Clientes</title>
 </svelte:head>
 
 <div class="container">
-    <h1 class="header">Veterinarios</h1>
+    <CreateButton url={Endpoints.donoCreate}></CreateButton>
+    <h1 class="header">Clientes</h1>
 
-    {#if vetList.length === 0}
+    {#if donoList.length === 0}
         <h2 class="h2">Nenhum Cliente Encontrado</h2>
     {:else}
         <div class="table-wrapper">
@@ -22,13 +25,15 @@
                 <tr>
                     <th>Nome</th>
                     <th>Email</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                {#each vetList as vet}
+                {#each donoList as dono}
                     <tr>
-                        <td>{vet.nome || 'No Name'}</td>
-                        <td>{vet.email || 'No Email'}</td>
+                        <td>{dono.nome || 'Nenhum Nome Registrado'}</td>
+                        <td>{dono.email || 'Nenhum email registrado'}</td>
+                        <td>{dono.pets || 'Nenhum Pet Registrado'}</td>
                     </tr>
                 {/each}
                 </tbody>
