@@ -25,5 +25,6 @@
         border: none;
         border-radius: 6px;
         cursor: pointer;
+        color: black;
     }
 </style>
