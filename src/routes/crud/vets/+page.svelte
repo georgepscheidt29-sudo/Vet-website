@@ -1,9 +1,75 @@
 <script lang="ts">
-    import type { Vet } from "$lib/api/types";
+    import type {Vet, VetRequest, FieldConfig, ColumnConfig} from "$lib/api/types";
+    import CreateButton from "$lib/components/CreateButton.svelte";
+    import EditModal from "$lib/components/EditModal.svelte";
+    import DataTable from "$lib/components/DataTable.svelte";
+    import {Endpoints} from "$lib/api/endpoints";
+    import {request} from "$lib/api/http";
+    import {HTTP_METHODS} from "$lib/api/enums";
 
     const { data } = $props();
 
-    const vetList: Vet[] = data?.data?.vetRespostaList || [];
+    let vetList: Vet[] = $state(data?.data?.vetRespostaList || []);
+
+    let editOpen = $state(false);
+    let editing: Vet | null = $state(null);
+    let editValues: Record<string, string> = $state({});
+
+    const vetFields: FieldConfig<VetRequest>[] = [
+        { key: "nome", label: "Nome" },
+        { key: "email", label: "Email", type: "email" },
+        { key: "senha", label: "Senha", type: "password" },
+    ];
+
+    const vetEditFields: FieldConfig<Vet>[] = [
+        { key: "nome", label: "Nome" },
+        { key: "email", label: "Email", type: "email" },
+    ];
+
+    const vetColumns: ColumnConfig<Vet>[] = [
+        { key: "nome", label: "Nome", emptyText: "No Name" },
+        { key: "email", label: "Email", emptyText: "No Email" },
+    ];
+
+    function handleCreated(created: Vet) {
+        vetList = [...vetList, created];
+    }
+
+    function openEdit(row: Vet) {
+        editing = row;
+        editValues = { nome: row.nome ?? "", email: row.email ?? "" };
+        editOpen = true;
+    }
+
+    async function submitEdit(values: Record<string, string>) {
+        if (!editing) return;
+
+        const url = `${Endpoints.backend}${Endpoints.vetUpdate(editing.id)}`;
+
+        try {
+            const updated: Vet = await request(url, HTTP_METHODS.PUT, JSON.stringify(values));
+            if (updated) {
+                vetList = vetList.map((v) => (v.id === editing!.id ? updated : v));
+            }
+            editOpen = false;
+            editing = null;
+        } catch (error) {
+            console.error("Failed to update vet:", error);
+        }
+    }
+
+    async function handleDelete(row: Vet) {
+        if (!confirm(`Excluir o veterinario "${row.nome}"?`)) return;
+
+        const url = `${Endpoints.backend}${Endpoints.vetDelete(row.id)}`;
+
+        try {
+            await request(url, HTTP_METHODS.DELETE);
+            vetList = vetList.filter((v) => v.id !== row.id);
+        } catch (error) {
+            console.error("Failed to delete vet:", error);
+        }
+    }
 </script>
 
 <svelte:head>
@@ -13,39 +79,35 @@
 <div class="container">
     <h1 class="header">Veterinarios</h1>
 
-    {#if vetList.length === 0}
-        <h2 class="h2">Nenhum Cliente Encontrado</h2>
-    {:else}
-        <div class="table-wrapper">
-            <table class="vet-table">
-                <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                </tr>
-                </thead>
-                <tbody>
-                {#each vetList as vet}
-                    <tr>
-                        <td>{vet.nome || 'No Name'}</td>
-                        <td>{vet.email || 'No Email'}</td>
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
-        </div>
-    {/if}
+    <div class="toolbar">
+        <CreateButton
+                url={Endpoints.vetCreate}
+                fields={vetFields}
+                title="Criar Veterinario"
+                buttonLabel="Criar"
+                onCreated={handleCreated}
+        />
+    </div>
+
+    <DataTable
+            items={vetList}
+            columns={vetColumns}
+            emptyMessage="Nenhum Veterinario Encontrado"
+            onEdit={openEdit}
+            onDelete={handleDelete}
+    />
 </div>
 
-<style>
-    .h2 {
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        padding: 2rem;
-        background: #fff;
-    }
+<EditModal
+        open={editOpen}
+        title="Editar Veterinario"
+        fields={vetEditFields}
+        initialValues={editValues}
+        onConfirm={submitEdit}
+        onClose={() => { editOpen = false; editing = null; }}
+/>
 
+<style>
     .header {
         display: flex;
         flex-direction: row;
@@ -54,46 +116,11 @@
         height: 20vh;
     }
 
-    .table-wrapper {
+    .toolbar {
         display: flex;
-        justify-content: center;
-    }
-
-    .vet-table {
+        justify-content: flex-end;
         width: 60%;
         max-width: 700px;
-        border-collapse: collapse;
-        background-color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        border-radius: 6px;
-        overflow: hidden;
-    }
-
-    .vet-table th,
-    .vet-table td {
-        text-align: left;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid #e0e0e0;
-        color: #333333;
-    }
-
-    .vet-table thead {
-        background-color: #f0f0f0;
-    }
-
-    .vet-table th {
-        color: #555555;
-        font-weight: 600;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-
-    .vet-table tbody tr:hover {
-        background-color: #fafafa;
-    }
-
-    .vet-table tbody tr:last-child td {
-        border-bottom: none;
+        margin: 0 auto 0.75rem auto;
     }
 </style>
