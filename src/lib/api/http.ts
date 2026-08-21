@@ -25,7 +25,7 @@ export async function request(url: string, method: string, body: any = null): Pr
     if (!response.ok) {
         if (response.status === 403 && isBrowser) {
 
-            window.location.href = '/login';
+            //window.location.href = '/login';
             return null;
         }
         throw new Error(`Request failed: ${response.status}`);

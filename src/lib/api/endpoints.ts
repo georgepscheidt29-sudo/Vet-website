@@ -4,5 +4,10 @@ export const Endpoints = {
     vetGet: (id: number) => `veterinarios/${id}`,
     vetUpdate: (id: number) => `veterinarios/${id}`,
     vetCreate: `veterinarios`,
-    vetDelete: (id: number) => `veterinarios/${id}`
+    vetDelete: (id: number) => `veterinarios/${id}`,
+    donoGet: (id: number) => `donos/${id}`,
+    donoGetAll: `donos`,
+    donoUpdate: (id: number) => `donos/${id}`,
+    donoDelete: (id: number) => `donos/${id}`,
+    donoCreate: `donos`
 } as const;
