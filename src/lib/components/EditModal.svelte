@@ -1,62 +1,39 @@
-<script lang="ts" generics="TRequest extends Record<string, unknown>, TResponse = TRequest">
-    import { request } from "$lib/api/http";
-    import { HTTP_METHODS } from "$lib/api/enums";
-    import { Endpoints } from "$lib/api/endpoints";
+<script lang="ts" generics="TRequest extends Record<string, unknown>">
     import type { FieldConfig } from "$lib/api/types";
 
     let {
-        url,
+        open = false,
+        title = "Editar",
         fields,
-        title = "Criar",
-        buttonLabel = "Criar",
-        onCreated,
+        initialValues,
+        onConfirm,
+        onClose,
     }: {
-        url: string;
-        fields: FieldConfig<TRequest>[];
+        open?: boolean;
         title?: string;
-        buttonLabel?: string;
-        onCreated?: (created: TResponse) => void;
+        fields: FieldConfig<TRequest>[];
+        initialValues: Record<string, string>;
+        onConfirm: (values: Record<string, string>) => void | Promise<void>;
+        onClose: () => void;
     } = $props();
 
-    let showModal = $state(false);
+    let values = $state<Record<string, string>>({});
 
-    let values = $state<Record<string, string>>(
-        Object.fromEntries(fields.map((f) => [f.key, ""]))
-    );
-
-    function openModal() {
-        values = Object.fromEntries(fields.map((f) => [f.key, ""]));
-        showModal = true;
-    }
-
-    function closeModal() {
-        showModal = false;
-    }
-
-    async function create() {
-        const payload = { ...values };
-        const resolvedUrl = `${Endpoints.backend}${url}`;
-
-        try {
-            const created = await request(resolvedUrl, HTTP_METHODS.POST, JSON.stringify(payload));
-            closeModal();
-
-            if (created) {
-                onCreated?.(created as TResponse);
-            }
-        } catch (error) {
-            console.error("Failed to create:", error);
+    $effect(() => {
+        if (open) {
+            values = { ...initialValues };
         }
+    });
+
+    async function confirm() {
+        await onConfirm({ ...values });
     }
 </script>
 
-<button class="create-button" onclick={openModal}>
-    {buttonLabel}
-</button>
-
-{#if showModal}
+{#if open}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div class="overlay" onclick={closeModal}>
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="overlay" onclick={onClose}>
         <div class="modal" onclick={(e) => e.stopPropagation()}>
             <h2>{title}</h2>
 
@@ -78,28 +55,14 @@
             {/each}
 
             <div class="modal-actions">
-                <button class="cancel-button" onclick={closeModal}>Cancelar</button>
-                <button class="confirm-button" onclick={create}>Confirmar</button>
+                <button class="cancel-button" onclick={onClose}>Cancelar</button>
+                <button class="confirm-button" onclick={confirm}>Salvar</button>
             </div>
         </div>
     </div>
 {/if}
 
 <style>
-    .create-button {
-        padding: 0.6rem 1.2rem;
-        background-color: #7b93ab;
-        color: #000000;
-        border: none;
-        border-radius: 4px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-
-    .create-button:hover {
-        background-color: #6a80a1;
-    }
-
     .overlay {
         position: fixed;
         top: 0;
